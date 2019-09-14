@@ -1,8 +1,5 @@
 package com.htn.proj;
-
-import android.content.Context;
-import android.location.LocationListener;
-import android.location.LocationManager;
+//Test comment
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,8 +47,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         if(savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_settings);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
+            navigationView.setCheckedItem(R.id.nav_map);
         }
     }
 
@@ -67,6 +64,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
+            case R.id.nav_map:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
+                break;
             case R.id.nav_settings:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
                 break;
