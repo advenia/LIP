@@ -1,8 +1,5 @@
 package com.htn.proj;
-
-import android.content.Context;
-import android.location.LocationListener;
-import android.location.LocationManager;
+//Test comment
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -16,17 +13,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     // nav bar
     private DrawerLayout drawer;
-    public static double[] coord = new double[2];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         if(savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_settings);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
+            navigationView.setCheckedItem(R.id.nav_map);
         }
     }
 
@@ -57,32 +46,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
-        LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new GeoListener();
-        try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
-        }catch(SecurityException e){};
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "localhost:8000/polls/download?x=";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url + coord[0] + "&y=" + coord[1] + "count=10", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                System.out.println(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println(error.getStackTrace());
-
-            }
-        });
-        queue.add(stringRequest);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
+            case R.id.nav_map:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
+                break;
             case R.id.nav_settings:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
                 break;
