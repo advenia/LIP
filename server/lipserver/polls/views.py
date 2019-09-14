@@ -32,7 +32,7 @@ def download(req):
         d = poi.__dict__
         d.pop('_state')
         return d
-    poi_list = sorted(PointOfInterest.objects.all(), key=lambda a: a.get_distance(numpy.array([float(req.POST['x']), float(req.POST['y'])])))[:int(req.GET['count'])]
+    poi_list = sorted(PointOfInterest.objects.all(), key=lambda a: a.get_distance(numpy.array([float(req.GET['x']), float(req.GET['y'])])))[:int(req.GET['count'])]
     return JsonResponse({
-        'points-of-interest': map(point_of_interest_to_dict, poi_list)
-    })
+        'points-of-interest': list(map(point_of_interest_to_dict, poi_list))
+    }, safe=False)

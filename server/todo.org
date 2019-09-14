@@ -1,0 +1,8 @@
+* Incoming data
+** Google maps landmarks
+** Facebook events
+** User input data
+* Aggregated data
+** Interest time per location
+* Outgoing data
+** Suggestions
