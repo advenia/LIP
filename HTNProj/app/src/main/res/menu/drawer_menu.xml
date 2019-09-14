@@ -9,13 +9,13 @@
             android:icon="@drawable/ic_map"
             android:title="Maps" />
         <item
-            android:id="@+id/nav_info"
-            android:icon="@drawable/ic_info"
-            android:title="Info" />
-        <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
             android:title="Settings" />
+        <item
+            android:id="@+id/nav_info"
+            android:icon="@drawable/ic_info"
+            android:title="Info" />
 
     </group>
 
