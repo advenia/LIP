@@ -5,6 +5,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
@@ -23,14 +25,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     // nav bar
     private DrawerLayout drawer;
+    Button b;
     public static double[] coord = new double[2];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        b = findViewById(R.id.button);
+        b.setOnClickListener(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -57,27 +62,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
-        LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new GeoListener();
-        try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
-        }catch(SecurityException e){};
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "localhost:8000/polls/download?x=";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url + coord[0] + "&y=" + coord[1] + "count=10", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                System.out.println(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println(error.getStackTrace());
-
-            }
-        });
-        queue.add(stringRequest);
     }
 
     @Override
@@ -95,6 +79,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new GeoListener();
+        try {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+            System.out.println("die");
+        }catch(SecurityException e){};
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://138.197.169.179/polls/download?x=";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url + Math.round(coord[0]) + "&y=" + Math.round(coord[1]) + "&count=10", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                System.out.println("Response: "+response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error.getMessage());
+
+            }
+        });
+        queue.add(stringRequest);
     }
     /*
                 NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
