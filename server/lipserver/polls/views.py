@@ -13,17 +13,17 @@ def tripform(req):
 
 
 def tripupload(req):
-    try:
-        _ = PointVisit(
-            point_of_interest=sorted(PointOfInterest.objects.all(), key=lambda a: a.get_distance(numpy.array([float(req.POST['x']), float(req.POST['y'])])))[0],
-            start_time=req.POST['start_time'],
-            end_time=req.POST['end_time']
-        )
-        print(_)
-        _.save()
-        return HttpResponse(_.__str__())
-    except Exception as e:
-        return HttpResponse(e.__str__())
+    _ = PointVisit(
+        point_of_interest=sorted(
+            PointOfInterest.objects.all(),
+            key=lambda a: a.get_distance(numpy.array([float(req.POST['x']), float(req.POST['y'])]))
+        )[0],
+        start_time=req.POST['start_time'],
+        end_time=req.POST['end_time']
+    )
+    # print(_)
+    _.save()
+    return HttpResponse("BAF")
 
 
 def download(req):
