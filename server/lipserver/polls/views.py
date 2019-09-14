@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from polls.models import PointOfInterest, PointVisit
 import numpy
@@ -26,6 +26,13 @@ def tripupload(req):
     return HttpResponse("BAF")
 
 
+# /polls/download?x=-41&y=-43&count=10
 def download(req):
-    x, y = map(float, [req.GET['x'], req.GET['y']])
-    return HttpResponse(str(x + y))
+    def point_of_interest_to_dict(poi):
+        d = poi.__dict__
+        d.pop('_state')
+        return d
+    poi_list = sorted(PointOfInterest.objects.all(), key=lambda a: a.get_distance(numpy.array([float(req.POST['x']), float(req.POST['y'])])))[:int(req.GET['count'])]
+    return JsonResponse({
+        'points-of-interest': map(point_of_interest_to_dict, poi_list)
+    })
