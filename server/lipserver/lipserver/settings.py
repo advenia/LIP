@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
+from .database import Database
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -77,7 +78,7 @@ WSGI_APPLICATION = 'lipserver.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': Database().location,
     }
 }
 

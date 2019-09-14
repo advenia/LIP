@@ -2,4 +2,4 @@ server/lipserver/credentials
 server/lipserver/db.sqlite3
 server/lipserver/lipserver/__pycache__
 server/lipserver/polls/__pycache__
-server/lipserver/migrations
+

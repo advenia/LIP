@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 import numpy
 
 # Create your models here.
@@ -26,4 +27,5 @@ class PointVisit(models.Model):
     end_time = models.DateTimeField()
 
     def __str__(self):
-        return self.point_of_interest.name + '[' + (self.end_time - self.start_time).__str__() + ']'
+        print(type(self.start_time))
+        return self.point_of_interest.name + '[' + str(self.end_time - self.start_time) + ']'
