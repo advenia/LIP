@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                     mChannel.enableLights(true);
                     mChannel.setLightColor(Color.GREEN);
                     mChannel.enableVibration(true);
-                    mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                    mChannel.setVibrationPattern(new long[]{100, 200});
                     mChannel.setShowBadge(false);
                     notificationManager.createNotificationChannel(mChannel);
                 }
@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("hi")
-                        .setContentText(Double.toString(Math.random()*256));
-
+                        .setContentText(Double.toString(Math.random()*256))
+                        .setVibrate(new long[]{100, 200});
                 Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
                 stackBuilder.addParentStack(MainActivity.class);
