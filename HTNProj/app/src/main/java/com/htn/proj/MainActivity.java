@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        //BUTTON STUFF
         testButton = findViewById(R.id.button);
         testButton.setOnClickListener(this);
+        testButton.setVisibility(View.INVISIBLE);
 //        //END BUTTON STUFF
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
