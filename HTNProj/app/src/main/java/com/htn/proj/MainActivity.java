@@ -1,5 +1,8 @@
 package com.htn.proj;
 //Test comment
+import android.content.Context;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -91,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }catch(SecurityException e){};
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://138.197.169.179/polls/download?x=";
+        String url = "http://localhost:8000/polls/download?x=";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url + Math.round(coord[0]) + "&y=" + Math.round(coord[1]) + "&count=10", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
