@@ -5,7 +5,7 @@
 Run these commands in order.
 
 ```bash
-pip install Django
+pip install Django numpy
 python manage.py migrate
 python manage.py makemigrations polls
 python manage.py sqlmigrate polls 0001
