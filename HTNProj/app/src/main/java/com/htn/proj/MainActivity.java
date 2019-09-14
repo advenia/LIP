@@ -1,5 +1,5 @@
 package com.htn.proj;
-
+//Test comment
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
