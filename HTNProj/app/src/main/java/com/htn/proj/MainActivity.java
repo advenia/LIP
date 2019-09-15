@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -66,8 +68,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FusedLocationProviderClient client;
     private JSONArray jArray= null;
     private RequestQueue queue;
-    //0 == long
-    //1 == lat
+    private String userID;
+    //0 == lat
+    //1 == long
     public static double[] coord = new double[2];
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -76,7 +79,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wInfo = wifiManager.getConnectionInfo();
+        userID = wInfo.getMacAddress();
         client = LocationServices.getFusedLocationProviderClient(this);
         if (!canAccessLocation()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -115,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 sendGETRequest();
                 sendPOSTRequest();
             }
-        }, 0, 15, TimeUnit.SECONDS);
+        }, 0, 5, TimeUnit.SECONDS);
     }
 
     public void sendPOSTRequest(){
@@ -143,13 +148,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 protected Map<String, String> getParams()
                 {
                     Map<String, String>  params = new HashMap<String, String>();
-                    params.put("longitude", coord[0]+"");
-                    params.put("latitude", coord[1]+"");
+                    params.put("latitude", coord[0]+"");
+                    params.put("longitude", coord[1]+"");
                     String date = "";
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                         date =LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                     }
                     params.put("time",date);
+                    params.put("user",userID);
                     return params;
                 }
             };
@@ -205,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_map:
                 MapFragment mapFragment = new MapFragment();
                 FragmentManager manager = getSupportFragmentManager();
-                manager.beginTransaction().replace(R.id.map1, mapFragment).commit();
+                manager.beginTransaction().replace(R.id.fragment_container, mapFragment).commit();
                 break;
             case R.id.nav_settings:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
@@ -233,9 +239,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onSuccess(Location location) {
                 System.out.println(location);
                 if(location!=null) {
-                    coord[0] = location.getLongitude();
-                    coord[1] = location.getLatitude();
-                    Toast.makeText(getApplicationContext(),"Long: "+coord[0]+"\nLat: "+coord[1],Toast.LENGTH_LONG).show();
+                    coord[0] = location.getLatitude();
+                    coord[1] = location.getLongitude();
+                    Toast.makeText(getApplicationContext(),"Lat: "+coord[0]+"\nLong: "+coord[1],Toast.LENGTH_LONG).show();
                 }
             }
         });
