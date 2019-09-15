@@ -1,6 +1,7 @@
 package com.htn.proj;
 //Test comment
 import android.content.Context;
+import android.content.Intent;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -74,7 +77,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new InfoFragment()).commit();
                 break;
             case R.id.nav_share:
-                Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
+                LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+                LocationListener locationListener = new GeoListener();
+                try {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+                    System.out.println("die");
+                }catch(SecurityException e){};
+
+                RequestQueue queue = Volley.newRequestQueue(this);
+                String url = "http://localhost:8000/polls/download?x=";
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url + Math.round(coord[0]) + "&y=" + Math.round(coord[1]) + "&count=10", new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("Response: "+response);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error.getMessage());
+
+                    }
+                });
+                queue.add(stringRequest);
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey meet me at: " + coord[0] + ", " + coord[1]);
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
+
+//                Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
@@ -83,31 +116,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onClick(View v) {
-        LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new GeoListener();
-        try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
-            System.out.println("die");
-        }catch(SecurityException e){};
 
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://localhost:8000/polls/download?x=";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url + Math.round(coord[0]) + "&y=" + Math.round(coord[1]) + "&count=10", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                System.out.println("Response: "+response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println(error.getMessage());
-
-            }
-        });
-        queue.add(stringRequest);
     }
     /*
-                NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+             NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
             String CHANNEL_ID = "";
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 CHANNEL_ID = "pings";

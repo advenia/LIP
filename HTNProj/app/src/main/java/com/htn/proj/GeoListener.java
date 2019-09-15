@@ -10,6 +10,7 @@ public class GeoListener implements LocationListener {
     public void onLocationChanged(Location loc) {
         MainActivity.coord[0] = loc.getLongitude();
         MainActivity.coord[1] = loc.getLatitude();
+        System.out.println("Coords: "+loc.getLongitude()+", "+loc.getLatitude());
     }
 
     @Override
