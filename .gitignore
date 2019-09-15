@@ -8,4 +8,5 @@ google-maps-landmarks-query/package-lock.json
 google-maps-landmarks-query/api-key
 *.old
 google-maps-landmarks-query/places.json
+HTNProj/app/src/debug/res/values/google_maps_api.xml
 
