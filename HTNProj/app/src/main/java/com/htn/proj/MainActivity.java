@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int LOCATION_REQUEST = 1340;
     private DrawerLayout drawer;
     private FusedLocationProviderClient client;
+
+    //0 == long
+    //1 == lat
     public static double[] coord = new double[2];
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
