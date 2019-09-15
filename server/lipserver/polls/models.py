@@ -34,11 +34,17 @@ class PointOfInterest(models.Model):
         return d * 1000  # meters
 
 
-class PointVisit(models.Model):
-    point_of_interest = models.ForeignKey(PointOfInterest, on_delete=models.DO_NOTHING)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+class PointUser(models.Model):
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    time = models.DateTimeField()
 
-    def __str__(self):
-        print(type(self.start_time))
-        return self.point_of_interest.name + '[' + str(self.end_time - self.start_time) + ']'
+
+# class PointVisit(models.Model):
+#     point_of_interest = models.ForeignKey(PointOfInterest, on_delete=models.DO_NOTHING)
+#     start_time = models.DateTimeField()
+#     end_time = models.DateTimeField()
+
+#     def __str__(self):
+#         print(type(self.start_time))
+#         return self.point_of_interest.name + '[' + str(self.end_time - self.start_time) + ']'

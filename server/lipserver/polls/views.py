@@ -1,6 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from polls.models import PointOfInterest, PointVisit
+from polls.models import PointOfInterest
 from django.views.decorators.csrf import csrf_exempt
 import numpy
 import subprocess
@@ -14,18 +14,18 @@ def tripform(req):
     return render(req, 'polls/tripupload.html')
 
 
-@csrf_exempt
-def tripupload(req):
-    _ = PointVisit(
-        point_of_interest=sorted(
-            PointOfInterest.objects.all(),
-            key=lambda a: a.get_distance(numpy.array([float(req.POST['latitude']), float(req.POST['longitude'])]))
-        )[0],
-        start_time=req.POST['start_time'],
-        end_time=req.POST['end_time']
-    )
-    _.save()
-    return HttpResponse("BAF")
+# @csrf_exempt
+# def tripupload(req):
+#     _ = PointVisit(
+#         point_of_interest=sorted(
+#             PointOfInterest.objects.all(),
+#             key=lambda a: a.get_distance(numpy.array([float(req.POST['latitude']), float(req.POST['longitude'])]))
+#         )[0],
+#         start_time=req.POST['start_time'],
+#         end_time=req.POST['end_time']
+#     )
+#     _.save()
+#     return HttpResponse("BAF")
 
 
 def download(req):
