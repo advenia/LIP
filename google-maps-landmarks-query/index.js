@@ -49,6 +49,7 @@ const ADDRESS = '140 Westmount Rd N, Waterloo, Ontario, Canada';
                     });
                 });
             })($('h3'), $('span.section-result-location'));
+            break;
             await sleep(2000);
         }
 
@@ -72,7 +73,14 @@ const ADDRESS = '140 Westmount Rd N, Waterloo, Ontario, Canada';
                 'longitude': pair[1]
             });
         }
-        fs.writeFileSync('places.json', out.toString(), 'utf8');
+        out.forEach((e) => {
+            request.post({
+                url: 'http://localhost:8000/polls/addpoint',
+                form: e
+            }, (err, res, body) => {
+                console.log(body);
+            });
+        });
     } catch(e) {
         console.error(e);
     } finally {

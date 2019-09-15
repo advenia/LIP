@@ -28,15 +28,21 @@ def tripupload(req):
     return HttpResponse("BAF")
 
 
-# /polls/download?x=-41&y=-43&count=10
 def download(req):
+    """
+    Cool GET request stuff:
+    latitude
+    longitude
+    count (number of points of interest)
+    radius (the radius in which to look for points)"""
     def point_of_interest_to_dict(poi):
         d = poi.__dict__
         d.pop('_state')
         return d
-    poi_list = sorted(PointOfInterest.objects.all(), key=lambda a: a.get_distance(numpy.array([float(req.GET['latitude']), float(req.GET['longitude'])])))[:int(req.GET['count'])]
+    pos = numpy.array([float(req.GET['latitude']), float(req.GET['longitude'])])
+    poi_list = sorted(PointOfInterest.objects.all(), key=lambda a: a.get_si_distance(pos))[:int(req.GET['count'])]
     return JsonResponse({
-        'points-of-interest': list(map(point_of_interest_to_dict, poi_list))
+        'points-of-interest': list(map(point_of_interest_to_dict, [p for p in poi_list if p.get_si_distance(pos) < int(req.GET['radius'])]))
     }, safe=False)
 
 
