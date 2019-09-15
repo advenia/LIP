@@ -1,6 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from polls.models import PointOfInterest, PointVisit
+from polls.models import PointOfInterest
 from django.views.decorators.csrf import csrf_exempt
 import numpy
 import subprocess
@@ -14,29 +14,35 @@ def tripform(req):
     return render(req, 'polls/tripupload.html')
 
 
-@csrf_exempt
-def tripupload(req):
-    _ = PointVisit(
-        point_of_interest=sorted(
-            PointOfInterest.objects.all(),
-            key=lambda a: a.get_distance(numpy.array([float(req.POST['latitude']), float(req.POST['longitude'])]))
-        )[0],
-        start_time=req.POST['start_time'],
-        end_time=req.POST['end_time']
-    )
-    _.save()
-    return HttpResponse("BAF")
+# @csrf_exempt
+# def tripupload(req):
+#     _ = PointVisit(
+#         point_of_interest=sorted(
+#             PointOfInterest.objects.all(),
+#             key=lambda a: a.get_distance(numpy.array([float(req.POST['latitude']), float(req.POST['longitude'])]))
+#         )[0],
+#         start_time=req.POST['start_time'],
+#         end_time=req.POST['end_time']
+#     )
+#     _.save()
+#     return HttpResponse("BAF")
 
 
-# /polls/download?x=-41&y=-43&count=10
 def download(req):
+    """
+    Cool GET request stuff:
+    latitude
+    longitude
+    count (number of points of interest)
+    radius (the radius in which to look for points)"""
     def point_of_interest_to_dict(poi):
         d = poi.__dict__
         d.pop('_state')
         return d
-    poi_list = sorted(PointOfInterest.objects.all(), key=lambda a: a.get_distance(numpy.array([float(req.GET['latitude']), float(req.GET['longitude'])])))[:int(req.GET['count'])]
+    pos = numpy.array([float(req.GET['latitude']), float(req.GET['longitude'])])
+    poi_list = sorted(PointOfInterest.objects.all(), key=lambda a: a.get_si_distance(pos))[:int(req.GET['count'])]
     return JsonResponse({
-        'points-of-interest': list(map(point_of_interest_to_dict, poi_list))
+        'points-of-interest': list(map(point_of_interest_to_dict, [p for p in poi_list if p.get_si_distance(pos) < int(req.GET['radius'])]))
     }, safe=False)
 
 
