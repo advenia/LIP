@@ -17,7 +17,7 @@ def tripupload(req):
     _ = PointVisit(
         point_of_interest=sorted(
             PointOfInterest.objects.all(),
-            key=lambda a: a.get_distance(numpy.array([float(req.POST['x']), float(req.POST['y'])]))
+            key=lambda a: a.get_distance(numpy.array([float(req.POST['latitude']), float(req.POST['longitude'])]))
         )[0],
         start_time=req.POST['start_time'],
         end_time=req.POST['end_time']

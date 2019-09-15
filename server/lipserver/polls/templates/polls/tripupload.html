@@ -1,7 +1,7 @@
 <form method="post" action="/polls/tripupload">
   {% csrf_token %}
-        <input type="text" name="x"/>
-        <input type="text" name="y"/>
+        <input type="text" name="latitude"/>
+        <input type="text" name="longitude"/>
         <input type="text" name="start_time"/>
         <input type="text" name="end_time"/>
         <button type="submit">Submit</button>
