@@ -1,6 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from polls.models import PointOfInterest
+from polls.models import PointOfInterest, PointUser
 from django.views.decorators.csrf import csrf_exempt
 import numpy
 import subprocess
@@ -26,6 +26,17 @@ def tripform(req):
 #     )
 #     _.save()
 #     return HttpResponse("BAF")
+
+
+@csrf_exempt
+def userpoint(req):
+    _ = PointUser(
+        latitude=req.POST['latitude'],
+        longitude=req.POST['longitude'],
+        time=req.POST['time']
+    )
+    _.save()
+    return HttpResponse("user baffed")
 
 
 def download(req):
