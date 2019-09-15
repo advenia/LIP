@@ -1,6 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from polls.models import PointOfInterest, PointVisit, GoogleLandmark
+from polls.models import PointOfInterest, PointVisit
 import numpy
 import subprocess
 
