@@ -11,10 +11,10 @@ class PointOfInterest(models.Model):
     address = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.name + '[' + str(self.x) + ', ' + str(self.y) + ']'
+        return self.name + '[lat:' + str(self.latitude) + ', long:' + str(self.longitude) + ']'
 
     def get_point(self):
-        return numpy.array([self.x, self.y])
+        return numpy.array([self.latitude, self.longitude])
 
     def get_distance(self, point):
         return numpy.linalg.norm(point - self.get_point())
