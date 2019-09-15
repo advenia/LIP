@@ -3,4 +3,9 @@ server/lipserver/db.sqlite3
 server/lipserver/lipserver/__pycache__
 server/lipserver/polls/__pycache__
 server/lipserver/polls/migrations/__pycache__
+google-maps-landmarks-query/node_modules
+google-maps-landmarks-query/package-lock.json
+google-maps-landmarks-query/api-key
+*.old
+google-maps-landmarks-query/places.json
 

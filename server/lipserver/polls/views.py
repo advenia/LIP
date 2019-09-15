@@ -1,6 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from polls.models import PointOfInterest, PointVisit
+from polls.models import PointOfInterest, PointVisit, GoogleLandmark
 import numpy
 
 
@@ -21,7 +21,6 @@ def tripupload(req):
         start_time=req.POST['start_time'],
         end_time=req.POST['end_time']
     )
-    # print(_)
     _.save()
     return HttpResponse("BAF")
 
@@ -36,3 +35,19 @@ def download(req):
     return JsonResponse({
         'points-of-interest': list(map(point_of_interest_to_dict, poi_list))
     }, safe=False)
+
+
+def googledata(req):
+    _ = GoogleLandmark(
+        lat=float(req.POST['lat']),
+        lng=float(req.POST['lng']),
+        icon=req.POST['icon'],
+        _id=req.POST['id'],
+        name=req.POST['name'],
+        place=req.POST['place'],
+        reference=req.POST['reference'],
+        types=req.POST['jsonstringtypes'],
+        vicinity=req.POST['vicinity']
+    )
+    _.save()
+    return HttpResponse()

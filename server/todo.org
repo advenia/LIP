@@ -6,3 +6,4 @@
 ** Interest time per location
 * Outgoing data
 ** Suggestions
+*** Radius

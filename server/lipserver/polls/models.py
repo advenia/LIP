@@ -1,15 +1,14 @@
 from django.db import models
-import datetime
 import numpy
 
 # Create your models here.
 
 
 class PointOfInterest(models.Model):
-    x = models.FloatField()
-    y = models.FloatField()
+    latitude = models.FloatField()
+    longitude = models.FloatField()
     name = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name + '[' + str(self.x) + ', ' + str(self.y) + ']'

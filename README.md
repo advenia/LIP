@@ -12,10 +12,12 @@ python manage.py migrate
 python manage.py createsuperuser # You can write down your user, email, and password in server/lipserver/credentials, which is in the .gitignore
 ```
 
+## Google Maps Landmarks Query
+
+```bash
+npm install --save express
+```
+
 ## What We Did
-<ul>
-  <li>
-    Scrape database landmarks for database. Google Maps Places API
-  </li>
-</ul>
+* Scrape database landmarks for database. Google Maps Places API
 
