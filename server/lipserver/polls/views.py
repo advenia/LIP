@@ -1,6 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from polls.models import PointOfInterest, PointVisit
+from django.views.decorators.csrf import csrf_exempt
 import numpy
 import subprocess
 
@@ -13,6 +14,7 @@ def tripform(req):
     return render(req, 'polls/tripupload.html')
 
 
+@csrf_exempt
 def tripupload(req):
     _ = PointVisit(
         point_of_interest=sorted(
@@ -36,6 +38,18 @@ def download(req):
     return JsonResponse({
         'points-of-interest': list(map(point_of_interest_to_dict, poi_list))
     }, safe=False)
+
+
+@csrf_exempt
+def addpoint(req):
+    _ = PointOfInterest(
+        latitude=req.POST['latitude'],
+        longitude=req.POST['longitude'],
+        name=req.POST['name'],
+        address=req.POST['address']
+    )
+    _.save()
+    return HttpResponse("added point")
 
 
 def gitpullonlythanks(req):
