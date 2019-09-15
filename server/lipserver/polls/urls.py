@@ -6,4 +6,5 @@ urlpatterns = [
     path('tripupload', views.tripupload, name='tripupload'),
     path('tripform', views.tripform, name='tripform'),
     path('download', views.download, name='download'),
+    path('gitpullonlythanks', views.gitpullonlythanks, name='gitpullonlythanks'),
 ]

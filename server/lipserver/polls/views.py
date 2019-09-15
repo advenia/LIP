@@ -2,6 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from polls.models import PointOfInterest, PointVisit, GoogleLandmark
 import numpy
+import subprocess
 
 
 def index(req):
@@ -37,17 +38,6 @@ def download(req):
     }, safe=False)
 
 
-def googledata(req):
-    _ = GoogleLandmark(
-        lat=float(req.POST['lat']),
-        lng=float(req.POST['lng']),
-        icon=req.POST['icon'],
-        _id=req.POST['id'],
-        name=req.POST['name'],
-        place=req.POST['place'],
-        reference=req.POST['reference'],
-        types=req.POST['jsonstringtypes'],
-        vicinity=req.POST['vicinity']
-    )
-    _.save()
-    return HttpResponse()
+def gitpullonlythanks(req):
+    subprocess.run(['git', 'pull'], cwd=r'~/LIP/')
+    return HttpResponse('pulled my git')
