@@ -18,6 +18,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,6 +45,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -54,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawer;
     private FusedLocationProviderClient client;
     private JSONArray jArray= null;
+    private RequestQueue queue;
     //0 == long
     //1 == lat
     public static double[] coord = new double[2];
@@ -71,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 requestPermissions(LOCATION_PERMS, LOCATION_REQUEST);
             }
         }
+        queue  = Volley.newRequestQueue(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
@@ -108,16 +121,61 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void sendPOSTRequest(){
         try {
             String url = "http://167.99.191.137/polls/userpoint";
-            JSONObject jsonBody = new JSONObject();
-            jsonBody.put("latitude",coord[0]);
-            jsonBody.put("longitude",coord[1]);
-            jsonBody.put("time",21);
-        }catch(Exception e){}
+            StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>()
+                    {
+                        @Override
+                        public void onResponse(String response) {
+                            // response
+                            System.out.println(response);
+                        }
+                    },
+                    new Response.ErrorListener()
+                    {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // error
+                            System.out.println(error.getMessage());
+                        }
+                    }
+            ) {
+                @Override
+                protected Map<String, String> getParams()
+                {
+                    Map<String, String>  params = new HashMap<String, String>();
+                    params.put("longitude", coord[0]+"");
+                    params.put("latitude", coord[1]+"");
+                    String date = "";
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        date =LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    }
+                    params.put("time",date);
+                    return params;
+                }
+            };
+            queue.add(postRequest);
+
+//            JSONObject jsonBody = new JSONObject();
+//            jsonBody.put("latitude",coord[0]);
+//            jsonBody.put("longitude",coord[1]);
+
+//            JsonObjectRequest jsonObject = new JsonObjectRequest(Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
+//                @Override
+//                public void onResponse(JSONObject response) {
+//                    System.out.println(response.toString());
+//                }
+//            }, new Response.ErrorListener() {
+//                @Override
+//                public void onErrorResponse(VolleyError error) {
+//                    System.out.println(error.getMessage());
+//                }
+//            });
+//            queue.add(jsonObject);
+        }catch(Exception e){e.printStackTrace();}
     }
 
     public void sendGETRequest(){
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = String.format("http://167.99.191.137/polls/download?longitude=%f&latitude=%f&count=%d",coord[0],coord[1],10);
+        String url = String.format("http://167.99.191.137/polls/download?longitude=%f&latitude=%f&count=%d&radius=%d",coord[0],coord[1],10,10);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
