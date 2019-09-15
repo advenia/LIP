@@ -87,16 +87,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_map);
         }
+
+//        scheduler.scheduleAtFixedRate(new Runnable() {
+//            @Override
+//            public void run() {
+//                checkLocation();
+//                sendGETRequest();
+//            }
+//        }, 0, 5, TimeUnit.SECONDS);
+
         scheduler.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
                 checkLocation();
-                sendRequest();
+                sendGETRequest();
+                sendPOSTRequest();
             }
-        }, 0, 5, TimeUnit.SECONDS);
+        }, 0, 15, TimeUnit.SECONDS);
     }
 
-    public void sendRequest(){
+    public void sendPOSTRequest(){
+        try {
+            String url = "http://167.99.191.137/polls/userpoint";
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("latitude",coord[0]);
+            jsonBody.put("longitude",coord[1]);
+            jsonBody.put("time",21);
+        }catch(Exception e){}
+    }
+
+    public void sendGETRequest(){
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = String.format("http://167.99.191.137/polls/download?longitude=%f&latitude=%f&count=%d",coord[0],coord[1],10);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
