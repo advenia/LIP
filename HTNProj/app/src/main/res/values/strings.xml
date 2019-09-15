@@ -2,6 +2,7 @@
     <string name="app_name">HTNProj</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_maps">Map</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
@@ -20,7 +21,6 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
     <!--    Settings Preferences-->
-    <string name="title_activity_maps">Map</string>
     <string-array name="pref_radius_values">
         <item>5</item>
         <item>10</item>
