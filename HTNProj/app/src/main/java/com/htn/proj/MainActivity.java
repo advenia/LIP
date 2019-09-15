@@ -37,6 +37,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.concurrent.Executors;
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int LOCATION_REQUEST = 1340;
     private DrawerLayout drawer;
     private FusedLocationProviderClient client;
-
+    private JSONArray jArray= null;
     //0 == long
     //1 == lat
     public static double[] coord = new double[2];
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void sendRequest(){
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = String.format("http://167.99.191.137/polls/download?x=%f&y=%f&count=%d",coord[0],coord[1],10);
+        String url = String.format("http://167.99.191.137/polls/download?longitude=%f&latitude=%f&count=%d",coord[0],coord[1],10);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
