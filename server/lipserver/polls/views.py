@@ -2,7 +2,6 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from polls.models import PointOfInterest, PointUser
 from django.views.decorators.csrf import csrf_exempt
-from math import  max
 import numpy
 import subprocess
 
@@ -56,8 +55,8 @@ def download(req):
         return d
 
     def content_rating(poi):
-        durations = [n.time - c.time for c, n in zip(PointUser.objects.all(), PointUser.objects.all()[1:])]
-        a_duration = sum(durations) / max(len(durations))
+        durations = [(n.time - c.time).microseconds for c, n in zip(PointUser.objects.all(), PointUser.objects.all()[1:])]
+        a_duration = sum(durations) / max(1, len(durations))
         visits = sorted(PointUser.objects.all(), key=lambda a: a.time)
         a_visit = len(visits) / max(1, (visits[-1] - visits[0]).days)
         return a_duration * a_visit / max(1, poi.get_si_distance(pos))
