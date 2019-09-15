@@ -1,0 +1,15 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory app:title="">
+
+        <ListPreference
+            app:defaultValue="5"
+            app:entries="@array/pref_radius_values"
+            app:entryValues="@array/pref_radius_values"
+            app:key="radius"
+            app:negativeButtonText="@null"
+            app:positiveButtonText="@null"
+            app:summary="Set how far the app will search around you in meters"
+            app:title="Set Radius" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

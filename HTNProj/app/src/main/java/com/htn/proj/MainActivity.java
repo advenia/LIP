@@ -11,7 +11,6 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.JsonReader;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.textclassifier.TextLinks;
@@ -30,6 +29,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -39,7 +39,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
@@ -54,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int LOCATION_REQUEST = 1340;
     private DrawerLayout drawer;
     private FusedLocationProviderClient client;
-    private JSONArray points= null;
+    private JSONArray jArray= null;
     //0 == long
     //1 == lat
     public static double[] coord = new double[2];
@@ -87,27 +86,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_map);
         }
+
+//        scheduler.scheduleAtFixedRate(new Runnable() {
+//            @Override
+//            public void run() {
+//                checkLocation();
+//                sendGETRequest();
+//            }
+//        }, 0, 5, TimeUnit.SECONDS);
+
         scheduler.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
                 checkLocation();
-                sendRequest();
+                sendGETRequest();
+                sendPOSTRequest();
             }
-        }, 0, 5, TimeUnit.SECONDS);
+        }, 0, 15, TimeUnit.SECONDS);
     }
 
-    public void sendRequest(){
+    public void sendPOSTRequest(){
+        try {
+            String url = "http://167.99.191.137/polls/userpoint";
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("latitude",coord[0]);
+            jsonBody.put("longitude",coord[1]);
+            jsonBody.put("time",21);
+        }catch(Exception e){}
+    }
+
+    public void sendGETRequest(){
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = String.format("http://167.99.191.137/polls/download?longitude=%f&latitude=%f&count=%d",coord[0],coord[1],10);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                try {
-                    JSONObject obj = new JSONObject(response);
-                    points = ((JSONArray)obj.get("points-of-interest"));
-                } catch (JSONException ex) {
-                    ex.printStackTrace();
-                }
+                System.out.println(response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -131,7 +145,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.nav_map:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
+                MapFragment mapFragment = new MapFragment();
+                FragmentManager manager = getSupportFragmentManager();
+                manager.beginTransaction().replace(R.id.map1, mapFragment).commit();
                 break;
             case R.id.nav_settings:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
