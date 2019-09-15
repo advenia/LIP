@@ -2,7 +2,6 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from polls.models import PointOfInterest, PointUser
 from django.views.decorators.csrf import csrf_exempt
-from math import  max
 import numpy
 import subprocess
 
