@@ -31,6 +31,7 @@ def tripform(req):
 @csrf_exempt
 def userpoint(req):
     _ = PointUser(
+        user=req.POST['user'],
         latitude=req.POST['latitude'],
         longitude=req.POST['longitude'],
         time=req.POST['time']
@@ -46,12 +47,21 @@ def download(req):
     longitude
     count (number of points of interest)
     radius (the radius in which to look for points)"""
+    pos = numpy.array([float(req.GET['latitude']), float(req.GET['longitude'])])
+
     def point_of_interest_to_dict(poi):
         d = poi.__dict__
         d.pop('_state')
         return d
-    pos = numpy.array([float(req.GET['latitude']), float(req.GET['longitude'])])
-    poi_list = sorted(PointOfInterest.objects.all(), key=lambda a: a.get_si_distance(pos))[:int(req.GET['count'])]
+
+    def content_rating(poi):
+        durations = [n.time - c.time for c, n in zip(PointUser.objects.all(), PointUser.objects.all()[1:])]
+        a_duration = sum(durations) / len(durations)
+        visits = sorted(PointUser.objects.all(), key=lambda a: a.time)
+        a_visit = len(visits) / (visits[-1] - visits[0]).dayso
+        return a_duration * a_visit / poi.get_si_distance(pos)
+
+    poi_list = sorted(PointOfInterest.objects.all(), key=content_rating, reverse=True)[:int(req.GET['count'])]
     return JsonResponse({
         'points-of-interest': list(map(point_of_interest_to_dict, [p for p in poi_list if p.get_si_distance(pos) < int(req.GET['radius'])]))
     }, safe=False)

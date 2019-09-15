@@ -35,6 +35,7 @@ class PointOfInterest(models.Model):
 
 
 class PointUser(models.Model):
+    user = models.CharField(max_length=127)
     latitude = models.FloatField()
     longitude = models.FloatField()
     time = models.DateTimeField()

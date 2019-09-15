@@ -1,9 +1,8 @@
 * Incoming data
-** Google maps landmarks
-** Facebook events
-** User input data
+** DONE Google maps landmarks
+** DONE User input data
 * Aggregated data
 ** Interest time per location
 * Outgoing data
-** Suggestions
-*** Radius
+** DONE Suggestions
+*** DONE Radius
