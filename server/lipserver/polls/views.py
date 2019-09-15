@@ -39,5 +39,5 @@ def download(req):
 
 
 def gitpullonlythanks(req):
-    subprocess.run(['git', 'pull'], cwd=r'~/LIP/')
+    subprocess.run(['git', 'pull'], cwd=r'/root/LIP/')
     return HttpResponse('pulled my git')
