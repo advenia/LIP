@@ -5,7 +5,6 @@
             app:defaultValue="5"
             app:entries="@array/pref_radius_values"
             app:entryValues="@array/pref_radius_values"
-            app:key="radius"
             app:negativeButtonText="@null"
             app:positiveButtonText="@null"
             app:summary="Set how far the app will search around you in meters"
