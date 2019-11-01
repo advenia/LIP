@@ -1,4 +1,10 @@
-# LIP
+# Location-based Information Provider
+
+There are two components: the Android app and the server.
+
+## Android app
+
+The Android app should be compiled using Android Studio or an equivalent setup.
 
 ## Server installation
 
@@ -11,13 +17,3 @@ python manage.py sqlmigrate polls
 python manage.py migrate
 python manage.py createsuperuser # You can write down your user, email, and password in server/lipserver/credentials, which is in the .gitignore
 ```
-
-## Google Maps Landmarks Query
-
-```bash
-npm install --save express
-```
-
-## What We Did
-* Scrape database landmarks for database. Google Maps Places API
-
